@@ -15,20 +15,21 @@ import javafx.scene.Scene;
 
 public class Generator extends Application {
 
-    private static String genString(int lenght){
+    private static String genString(int length){
         SecureRandom randomString = new SecureRandom();
-        byte[] bytes = new byte[lenght];
+        byte[] bytes = new byte[length];
         randomString.nextBytes(bytes);
-        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+        String encoded = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+        if (encoded.length() > length) return encoded.substring(0, length);
+        return encoded;
     }
 
     @Override
     public void start(Stage stage){
-    int stringLenght;
 
         Label title = new Label("Gerador de Senhas Customizavel");
-        Text lenghtDescription = new Text("Quantidade de Caracteres: ");
-        TextField lenght = new TextField();
+        Text lengthDescription = new Text("Quantidade de Caracteres: ");
+        TextField length = new TextField();
         Button btn = new Button("Gerar Senha!");
         Label result = new Label();
 
@@ -38,17 +39,21 @@ public class Generator extends Application {
         layout.setVgap(5);
 
         layout.add(title, 0,0,3,1);
-        layout.addRow(1,lenghtDescription);
-        layout.add(lenght,1,1,2,1);
+        layout.addRow(1,lengthDescription);
+        layout.add(length,1,1,2,1);
         layout.add(btn,1,3);
         layout.add(result, 0,4,3,1);
 
-        btn.setOnAction(actionEvent -> {
+        btn.setOnAction(_ -> {
             try{
-                int getLenght = Integer.parseInt(lenght.getText());
+                int getLenght = Integer.parseInt(length.getText());
+                if (getLenght <= 0){
+                    result.setText("Digite um número maior que zero!");
+                    return;
+                }
                 result.setText(genString(getLenght));
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            } catch (NumberFormatException e) {
+                result.setText("Digite um número válido!");
             }
         });
 

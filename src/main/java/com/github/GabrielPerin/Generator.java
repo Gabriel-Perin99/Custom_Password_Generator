@@ -1,4 +1,4 @@
-package org.example;
+package com.github.GabrielPerin;
 
 import javafx.application.Application;
 import javafx.geometry.HPos;

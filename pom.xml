@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
-    <artifactId>Custom_Password_Generator</artifactId>
+    <groupId>com.github.GabrielPerin</groupId>
+    <artifactId>Custom-Password-Generator</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>Custom_Password_Generator</name>
+    <name>Custom Password Generator</name>
     <packaging>jar</packaging>
 
     <properties>
@@ -69,7 +69,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>org.example.Generator</mainClass>
+                            <mainClass>com.github.GabrielPerin.Generator</mainClass>
                             <options>
                                 <option>--module-path</option>
                                 <option>${javafx.module.path}</option>

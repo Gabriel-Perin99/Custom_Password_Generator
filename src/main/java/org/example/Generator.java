@@ -74,7 +74,7 @@ public class Generator extends Application {
 
         //Base Layout
         HBox checkBox = new HBox(totalPass,partialPass);
-        checkBox.setSpacing(30);
+        checkBox.setSpacing(15);
 
         HBox totalPassInfo = new HBox(totalDescription,totalLengthValue);
         totalPassInfo.setSpacing(3);
@@ -87,11 +87,14 @@ public class Generator extends Application {
         GridPane layout = new GridPane();
         layout.setAlignment(Pos.CENTER);
         GridPane.setHalignment(layout,HPos.CENTER);
-        layout.setHgap(5);
-        layout.setVgap(5);
-        layout.add(title, 0,0,4,1);
+        layout.setVgap(15);
+
+        layout.add(title, 0,0,3,1);
+        GridPane.setHalignment(title,HPos.CENTER);
+
         layout.add(info,1,1,3,1);
-        info.setPadding(new Insets(0,0,0,80));
+        GridPane.setHalignment(info, HPos.CENTER);
+
         layout.add(checkBox,0,2,2,1);
 
         //in this section is where the logic is for the specific elements of each method to be implemented the interface
@@ -103,6 +106,7 @@ public class Generator extends Application {
                 partialPass.setSelected(false);
                 layout.add(totalPassInfo, 1, 3, 1, 1);
                 layout.add(btnTotal, 0, 4,2,1);}
+                GridPane.setHalignment(btnTotal,HPos.CENTER);
             });
 
         partialPass.setOnAction(_ -> {
@@ -113,6 +117,7 @@ public class Generator extends Application {
                 totalPass.setSelected(false);
                 layout.add(partialPassInfo, 1, 3, 1, 1);
                 layout.add(btnPartial, 0, 4,2,1);
+                GridPane.setHalignment(btnPartial,HPos.CENTER);
             }
         });
 
@@ -122,7 +127,8 @@ public class Generator extends Application {
             if (newValue.isEmpty()) {
                 layout.getChildren().removeAll(copyBtn);
             }else if (!layout.getChildren().contains(copyBtn)){
-                layout.add(copyBtn,2,5);
+                layout.add(copyBtn,1,5);
+                GridPane.setHalignment(copyBtn,HPos.RIGHT);
             }
         });
         //This section is where the action of the buttons is configured to generate the results based on the user filling

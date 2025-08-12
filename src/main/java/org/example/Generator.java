@@ -120,6 +120,10 @@ public class Generator extends Application {
         btnPartial.setOnAction(_->{
             try{
                 String getWord = word.getText();
+                if(getWord == ""){
+                    result.setText("É necessário preencher o campo!");
+                    return;
+                }
                 result.setText(partialPasswordGenerator(getWord));
             } catch (Exception e) {
                 throw new RuntimeException(e);

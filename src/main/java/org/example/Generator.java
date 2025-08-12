@@ -53,16 +53,20 @@ public class Generator extends Application {
         CheckBox totalPass = new CheckBox("Gerador Total");
         Text totalDescription = new Text("Quantidade de Caracteres: ");
         TextField totalLengthValue = new TextField();
+        totalLengthValue.setPromptText("Ex: 12");
         Button btnTotal = new Button("Gerar Senha!");
 
         //Objects belonging to the partial password generation method:
         CheckBox partialPass = new CheckBox("Adicione uma Palavra");
         Text wordInfo = new Text("Digite sua Palavra:");
         TextField word = new TextField();
+        word.setPromptText("EX: Cachorro12");
         Button btnPartial = new Button("Gerar Senha!");
 
         //Here is the text field where the password will appear
-        TextField result = new TextField("Resultado será Impresso aqui!");
+        TextField result = new TextField();
+        result.setPromptText("Resultado será Impresso aqui!");
+        result.setEditable(false);
 
         HBox hBox = new HBox(totalPass,partialPass);
         hBox.setSpacing(15);

@@ -2,7 +2,6 @@ package com.github.GabrielPerin;
 
 import javafx.application.Application;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
@@ -48,17 +47,19 @@ public class Generator extends Application {
     public void start(Stage stage){
 
         Label title = new Label("Gerador de Senhas Customizavel");
+        title.getStyleClass().add("title");
         Label info = new Label("Selecione uma Opção:");
+        info.getStyleClass().add("info");
 
         //objects belonging to the total password generation method:
-        CheckBox totalPass = new CheckBox("Gerador Total");
+        CheckBox totalPassword = new CheckBox("Gerador Total");
         Text totalDescription = new Text("Quant. de Caracteres: ");
         TextField totalLengthValue = new TextField();
         totalLengthValue.setPromptText("Ex: 12");
         Button btnTotal = new Button("Gerar Senha!");
 
         //Objects belonging to the partial password generation method:
-        CheckBox partialPass = new CheckBox("Adicione uma Palavra");
+        CheckBox partialPassword = new CheckBox("Adicione uma Palavra");
         Text wordInfo = new Text("Digite sua Palavra:");
         TextField word = new TextField();
         word.setPromptText("EX: Cachorro12");
@@ -73,18 +74,23 @@ public class Generator extends Application {
         Button copyBtn = new Button("Copiar");
 
         //Base Layout
-        HBox checkBox = new HBox(totalPass,partialPass);
+        HBox checkBox = new HBox(totalPassword, partialPassword);
         checkBox.setSpacing(15);
+        checkBox.setAlignment(Pos.CENTER);
+        checkBox.getStyleClass().add("checkBox");
 
         HBox totalPassInfo = new HBox(totalDescription,totalLengthValue);
-        totalPassInfo.setSpacing(3);
+        totalPassInfo.setSpacing(10);
         totalPassInfo.setAlignment(Pos.CENTER);
+        GridPane.setHalignment(totalPassInfo,HPos.CENTER);
 
         HBox partialPassInfo = new HBox(wordInfo,word);
-        partialPassInfo.setSpacing(3);
+        partialPassInfo.setSpacing(10);
         partialPassInfo.setAlignment(Pos.CENTER);
+        GridPane.setHalignment(totalPassInfo,HPos.CENTER);
 
         GridPane layout = new GridPane();
+        layout.getStyleClass().add("bkg");
         layout.setAlignment(Pos.CENTER);
         GridPane.setHalignment(layout,HPos.CENTER);
         layout.setVgap(15);
@@ -95,39 +101,41 @@ public class Generator extends Application {
         layout.add(info,1,1,3,1);
         GridPane.setHalignment(info, HPos.CENTER);
 
-        layout.add(checkBox,0,2,2,1);
+        layout.add(checkBox,0,2,3,1);
 
         //in this section is where the logic is for the specific elements of each method to be implemented the interface
 
-        totalPass.setOnAction(_ ->{
+        totalPassword.setOnAction(_ ->{
             layout.getChildren().removeAll(totalPassInfo, btnTotal,partialPassInfo, btnPartial);
 
-            if (totalPass.isSelected()) {
-                partialPass.setSelected(false);
-                layout.add(totalPassInfo, 1, 3, 1, 1);
-                layout.add(btnTotal, 0, 4,2,1);}
+            if (totalPassword.isSelected()) {
+                result.setText("");
+                partialPassword.setSelected(false);
+                layout.add(totalPassInfo, 1, 3, 3, 1);
+                layout.add(btnTotal, 0, 4,3,1);}
                 GridPane.setHalignment(btnTotal,HPos.CENTER);
             });
 
-        partialPass.setOnAction(_ -> {
+        partialPassword.setOnAction(_ -> {
 
             layout.getChildren().removeAll(totalPassInfo, btnTotal,partialPassInfo, btnPartial);
 
-            if (partialPass.isSelected()) {
-                totalPass.setSelected(false);
-                layout.add(partialPassInfo, 1, 3, 1, 1);
-                layout.add(btnPartial, 0, 4,2,1);
+            if (partialPassword.isSelected()) {
+                result.setText("");
+                totalPassword.setSelected(false);
+                layout.add(partialPassInfo, 1, 3, 3, 1);
+                layout.add(btnPartial, 0, 4,3,1);
                 GridPane.setHalignment(btnPartial,HPos.CENTER);
             }
         });
 
-        layout.add(result, 0,5,2,1);
+        layout.add(result, 0,5,3,1);
         //Add the copy button the password when the result is not empty
         result.textProperty().addListener((observable,oldValue,newValue )->{
             if (newValue.isEmpty()) {
                 layout.getChildren().removeAll(copyBtn);
             }else if (!layout.getChildren().contains(copyBtn)){
-                layout.add(copyBtn,1,5);
+                layout.add(copyBtn,1,5,3,1);
                 GridPane.setHalignment(copyBtn,HPos.RIGHT);
             }
         });
@@ -137,7 +145,12 @@ public class Generator extends Application {
             try{
                 int getLenght = Integer.parseInt(totalLengthValue.getText());
                 if (getLenght <= 0){
+                    result.setText("");
                     result.setPromptText("Digite um número maior que zero!");
+                    return;
+                } else if (getLenght > 15) {
+                    result.setText("");
+                    result.setPromptText("Máximo de 20 Caracteres!");
                     return;
                 }
                 result.setText(totalPasswordGenerator(getLenght));
@@ -150,6 +163,7 @@ public class Generator extends Application {
             try{
                 String getWord = word.getText();
                 if(Objects.equals(getWord, "")){
+                    result.setText("");
                     result.setPromptText("É necessário preencher o campo!");
                     return;
                 }
@@ -173,9 +187,17 @@ public class Generator extends Application {
             alert.setContentText("Senha Copiada para área de transferência");
             alert.show();
 
+            result.setText("");
+            totalPassword.setSelected(false);
+            partialPassword.setSelected(false);
+            word.setText("");
+            totalLengthValue.setText("");
+            layout.getChildren().removeAll(totalPassInfo, btnTotal,partialPassInfo, btnPartial);
+
         });
 
         Scene scene = new Scene(layout, 500,400);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/CSS/styles.css")).toExternalForm());
         stage.setTitle("Gerador de Senhas");
         stage.setScene(scene);
         stage.show();

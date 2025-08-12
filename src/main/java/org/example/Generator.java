@@ -17,24 +17,29 @@ import javafx.scene.Scene;
 
 
 public class Generator extends Application {
-
+    //Method to generate passwords with a word to the user's choice
     private static String partialPasswordGenerator(String word) {
         SecureRandom random = new SecureRandom();
         byte[] bytes = new byte[3];
         random.nextBytes(bytes);
+
         byte[] bytes1 = new byte[3];
         random.nextBytes(bytes1);
+
         String encoded = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
         String encoded2 = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes1);
 
         return encoded+word+encoded2;
     }
-
+    //method that generates a password based on the amount of desired characters
     private static String totalPasswordGenerator(int length){
         SecureRandom randomString = new SecureRandom();
         byte[] bytes = new byte[length];
+
         randomString.nextBytes(bytes);
+
         String encoded = Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+       //If the string is greater than the desired size, it is cut.
         if (encoded.length() > length) return encoded.substring(0, length);
         return encoded;
     }
@@ -54,9 +59,9 @@ public class Generator extends Application {
         CheckBox partialPass = new CheckBox("Adicione uma Palavra");
         Text wordInfo = new Text("Digite sua Palavra:");
         TextField word = new TextField();
-        Button btn2 = new Button("Gerar Senha!");
+        Button btnPartial = new Button("Gerar Senha!");
 
-
+        //Here is the text field where the password will appear
         TextField result = new TextField("Resultado será Impresso aqui!");
 
         HBox hBox = new HBox(totalPass,partialPass);
@@ -68,8 +73,10 @@ public class Generator extends Application {
         layout.add(title, 0,0,3,1);
         layout.add(hBox,1,1);
 
+        //in this section is where the logic is for the specific elements of each method to be implemented the interface
+
         totalPass.setOnAction(_ ->{
-            layout.getChildren().removeAll(totalLengthValue,totalDescription, btnTotal,word,wordInfo,btn2);
+            layout.getChildren().removeAll(totalLengthValue,totalDescription, btnTotal,word,wordInfo, btnPartial);
 
             if (totalPass.isSelected()) {
                 partialPass.setSelected(false);
@@ -80,18 +87,19 @@ public class Generator extends Application {
 
         partialPass.setOnAction(_ -> {
 
-            layout.getChildren().removeAll(totalLengthValue,totalDescription, btnTotal, word, wordInfo, btn2);
+            layout.getChildren().removeAll(totalLengthValue,totalDescription, btnTotal, word, wordInfo, btnPartial);
 
             if (partialPass.isSelected()) {
                 totalPass.setSelected(false);
                 layout.addRow(2, wordInfo);
                 layout.add(word, 1, 2, 2, 1);
-                layout.add(btn2, 1, 3);
+                layout.add(btnPartial, 1, 3);
             }
         });
 
         layout.add(result, 0,4,5,1);
 
+        //This section is where the action of the buttons is configured to generate the results based on the user filling
         btnTotal.setOnAction(_ -> {
             try{
                 int getLenght = Integer.parseInt(totalLengthValue.getText());
@@ -105,7 +113,7 @@ public class Generator extends Application {
             }
         });
 
-        btn2.setOnAction(_->{
+        btnPartial.setOnAction(_->{
             try{
                 String getWord = word.getText();
                 result.setText(partialPasswordGenerator(getWord));

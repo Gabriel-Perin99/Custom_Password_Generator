@@ -148,7 +148,7 @@ public class Generator extends Application {
                     result.setText("");
                     result.setPromptText("Digite um número maior que zero!");
                     return;
-                } else if (getLenght > 15) {
+                } else if (getLenght > 20) {
                     result.setText("");
                     result.setPromptText("Máximo de 20 Caracteres!");
                     return;

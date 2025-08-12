@@ -122,7 +122,7 @@ public class Generator extends Application {
             if (newValue.isEmpty()) {
                 layout.getChildren().removeAll(copyBtn);
             }else if (!layout.getChildren().contains(copyBtn)){
-                layout.add(copyBtn,2,4);
+                layout.add(copyBtn,2,5);
             }
         });
         //This section is where the action of the buttons is configured to generate the results based on the user filling

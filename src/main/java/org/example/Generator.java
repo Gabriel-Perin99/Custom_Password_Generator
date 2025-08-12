@@ -1,20 +1,20 @@
 package org.example;
 
 import javafx.application.Application;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import java.security.SecureRandom;
 import java.util.Base64;
-
+import java.util.Objects;
 import javafx.scene.Scene;
-
 
 public class Generator extends Application {
     //Method to generate passwords with a word to the user's choice
@@ -48,10 +48,11 @@ public class Generator extends Application {
     public void start(Stage stage){
 
         Label title = new Label("Gerador de Senhas Customizavel");
+        Label info = new Label("Selecione uma Opção:");
 
         //objects belonging to the total password generation method:
         CheckBox totalPass = new CheckBox("Gerador Total");
-        Text totalDescription = new Text("Quantidade de Caracteres: ");
+        Text totalDescription = new Text("Quant. de Caracteres: ");
         TextField totalLengthValue = new TextField();
         totalLengthValue.setPromptText("Ex: 12");
         Button btnTotal = new Button("Gerar Senha!");
@@ -68,66 +69,104 @@ public class Generator extends Application {
         result.setPromptText("Resultado será Impresso aqui!");
         result.setEditable(false);
 
-        HBox hBox = new HBox(totalPass,partialPass);
-        hBox.setSpacing(15);
+        //Set a Copy Button
+        Button copyBtn = new Button("Copiar");
+
+        //Base Layout
+        HBox checkBox = new HBox(totalPass,partialPass);
+        checkBox.setSpacing(30);
+
+        HBox totalPassInfo = new HBox(totalDescription,totalLengthValue);
+        totalPassInfo.setSpacing(3);
+        totalPassInfo.setAlignment(Pos.CENTER);
+
+        HBox partialPassInfo = new HBox(wordInfo,word);
+        partialPassInfo.setSpacing(3);
+        partialPassInfo.setAlignment(Pos.CENTER);
+
         GridPane layout = new GridPane();
         layout.setAlignment(Pos.CENTER);
-        layout.setHgap(15);
+        GridPane.setHalignment(layout,HPos.CENTER);
+        layout.setHgap(5);
         layout.setVgap(5);
-        layout.add(title, 0,0,3,1);
-        layout.add(hBox,1,1);
+        layout.add(title, 0,0,4,1);
+        layout.add(info,1,1,3,1);
+        info.setPadding(new Insets(0,0,0,80));
+        layout.add(checkBox,0,2,2,1);
 
         //in this section is where the logic is for the specific elements of each method to be implemented the interface
 
         totalPass.setOnAction(_ ->{
-            layout.getChildren().removeAll(totalLengthValue,totalDescription, btnTotal,word,wordInfo, btnPartial);
+            layout.getChildren().removeAll(totalPassInfo, btnTotal,partialPassInfo, btnPartial);
 
             if (totalPass.isSelected()) {
                 partialPass.setSelected(false);
-                layout.addRow(2, totalDescription);
-                layout.add(totalLengthValue, 1, 2, 2, 1);
-                layout.add(btnTotal, 1, 3);}
+                layout.add(totalPassInfo, 1, 3, 1, 1);
+                layout.add(btnTotal, 0, 4,2,1);}
             });
 
         partialPass.setOnAction(_ -> {
 
-            layout.getChildren().removeAll(totalLengthValue,totalDescription, btnTotal, word, wordInfo, btnPartial);
+            layout.getChildren().removeAll(totalPassInfo, btnTotal,partialPassInfo, btnPartial);
 
             if (partialPass.isSelected()) {
                 totalPass.setSelected(false);
-                layout.addRow(2, wordInfo);
-                layout.add(word, 1, 2, 2, 1);
-                layout.add(btnPartial, 1, 3);
+                layout.add(partialPassInfo, 1, 3, 1, 1);
+                layout.add(btnPartial, 0, 4,2,1);
             }
         });
 
-        layout.add(result, 0,4,5,1);
-
+        layout.add(result, 0,5,2,1);
+        //Add the copy button the password when the result is not empty
+        result.textProperty().addListener((observable,oldValue,newValue )->{
+            if (newValue.isEmpty()) {
+                layout.getChildren().removeAll(copyBtn);
+            }else if (!layout.getChildren().contains(copyBtn)){
+                layout.add(copyBtn,2,4);
+            }
+        });
         //This section is where the action of the buttons is configured to generate the results based on the user filling
+
         btnTotal.setOnAction(_ -> {
             try{
                 int getLenght = Integer.parseInt(totalLengthValue.getText());
                 if (getLenght <= 0){
-                    result.setText("Digite um número maior que zero!");
+                    result.setPromptText("Digite um número maior que zero!");
                     return;
                 }
                 result.setText(totalPasswordGenerator(getLenght));
             } catch (NumberFormatException e) {
-                result.setText("Digite um número válido!");
+                result.setPromptText("Digite um número válido!");
             }
         });
 
         btnPartial.setOnAction(_->{
             try{
                 String getWord = word.getText();
-                if(getWord == ""){
-                    result.setText("É necessário preencher o campo!");
+                if(Objects.equals(getWord, "")){
+                    result.setPromptText("É necessário preencher o campo!");
                     return;
                 }
                 result.setText(partialPasswordGenerator(getWord));
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+        });
+
+        //Copy button logic
+        copyBtn.setOnAction(_->{
+            String copyText = result.getText();
+            //Object that copies the text established in variable copytext
+            ClipboardContent content = new ClipboardContent();
+            content.putString(copyText);
+            //object that transfers the copied text to the system
+            Clipboard clipboard = Clipboard.getSystemClipboard();
+            clipboard.setContent(content);
+            //Object that generates a warning when the password is copied
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setContentText("Senha Copiada para área de transferência");
+            alert.show();
+
         });
 
         Scene scene = new Scene(layout, 500,400);

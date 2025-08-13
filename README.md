@@ -1,7 +1,7 @@
 # 🔑 Gerador de Senhas Customizável 🔑
 
 #### Autor: [Gabriel Perin](https://github.com/Gabriel-Perin99)
-Um aplicativo desktop em **Java+JavaFX+CSS** que gera senhas de forma totalemente aleatória ou combbinando uma palavra escolhida pelo usuário com caracteres aleatórios.
+Um aplicativo desktop em **Java+JavaFX+CSS** que gera senhas de forma totalemente aleatória ou combinando uma palavra escolhida pelo usuário com caracteres aleatórios.
 
 
 <img alt ="Imagem do Projeto" src="src/main/resources/Sample.png">
@@ -45,7 +45,7 @@ Certifique-se de ter o Maven e o JavaFX Configurados:
 ```
 
 ### 4.Exetutando sem o Maven:
-Existem maneiras de executar o projeto sem o gerenciamento do Maven, porem deverá ser feita toda a dependencia do javaFX de maneira manual:
+Existem maneiras de executar o projeto sem o gerenciamento do Maven, porem deverá ser feita toda a dependência do javaFX de maneira manual:
 ***
 #### Intellij IDE: 
 - Selecione **Run > Edit Configuration > + Aplication**;  
